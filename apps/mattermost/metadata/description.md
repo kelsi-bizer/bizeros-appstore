@@ -29,6 +29,7 @@ The following environment variables are wired into the container:
 | `MM_SERVICESETTINGS_ALLOWCORSFROM` | compose | CORS allow-list (set to `*` by default) |
 | `MM_TEAMSETTINGS_SITENAME` | form field `SITE_NAME` | Display name in the UI |
 | `MM_SUPPORTSETTINGS_SUPPORTEMAIL` | form field `ADMIN_EMAIL` | Support contact shown in-app |
+| `POSTGRES_PASSWORD` | auto-generated (random field) | Password for the bundled Postgres `mmuser` role; persisted by Runtipi on first install |
 | `TZ` | compose (`${TZ:-UTC}`) | Container timezone |
 
 ## Data persistence

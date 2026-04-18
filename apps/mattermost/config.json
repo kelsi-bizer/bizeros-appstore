@@ -9,7 +9,7 @@
     "social"
   ],
   "description": "Mattermost is an open-source, self-hostable online chat service with file sharing, search, and integrations. It is designed as an internal chat for organisations and companies, and markets itself as an open-source alternative to Slack and Microsoft Teams.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "latest",
   "source": "https://github.com/mattermost/mattermost",
   "website": "https://mattermost.com",
@@ -35,6 +35,15 @@
       "env_variable": "ADMIN_EMAIL",
       "required": true,
       "hint": "Email address surfaced in Mattermost as the support / admin contact."
+    },
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "POSTGRES_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated on first install and used for the bundled Postgres DB; rotating it requires updating the DB role."
     }
   ]
 }
