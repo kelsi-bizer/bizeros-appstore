@@ -1,0 +1,44 @@
+{
+  "name": "Twenty",
+  "id": "twenty",
+  "available": true,
+  "short_desc": "Open-source, self-hostable CRM built as a modern alternative to Salesforce.",
+  "author": "twentyhq",
+  "port": 8080,
+  "categories": [
+    "utilities"
+  ],
+  "description": "Twenty is an open-source CRM designed as a modern, self-hostable alternative to Salesforce. It offers a customisable data model, Kanban and table views, task and note management, and a plugin-friendly architecture. This package bundles the Twenty server, background worker, Postgres 16, and Redis so the app is fully self-contained.",
+  "tipi_version": 1,
+  "version": "v1.23.4",
+  "source": "https://github.com/twentyhq/twenty",
+  "website": "https://twenty.com",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "App Secret",
+      "env_variable": "APP_SECRET",
+      "required": true,
+      "min": 32,
+      "encoding": "base64",
+      "hint": "Auto-generated session / token-signing secret. Rotating it invalidates all existing sessions."
+    },
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "PG_DATABASE_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated on first install and used for the bundled Postgres role."
+    }
+  ]
+}

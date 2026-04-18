@@ -1,0 +1,70 @@
+services:
+  twenty-server:
+    image: twentycrm/twenty:v1.23.4
+    environment:
+      TZ: ${TZ:-UTC}
+      NODE_PORT: 3000
+      SERVER_URL: https://${APP_DOMAIN}
+      PG_DATABASE_URL: postgres://twenty:${PG_DATABASE_PASSWORD}@twenty-db:5432/default
+      REDIS_URL: redis://twenty-redis:6379
+      APP_SECRET: "${APP_SECRET}"
+      STORAGE_TYPE: local
+    volumes:
+      - ${APP_DATA_DIR}/data/server:/app/packages/twenty-server/.local-storage
+    depends_on:
+      twenty-db:
+        condition: service_healthy
+      twenty-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    x-runtipi:
+      is_main: true
+      internal_port: 3000
+
+  twenty-worker:
+    image: twentycrm/twenty:v1.23.4
+    command: ["yarn", "worker:prod"]
+    environment:
+      TZ: ${TZ:-UTC}
+      SERVER_URL: https://${APP_DOMAIN}
+      PG_DATABASE_URL: postgres://twenty:${PG_DATABASE_PASSWORD}@twenty-db:5432/default
+      REDIS_URL: redis://twenty-redis:6379
+      APP_SECRET: "${APP_SECRET}"
+      STORAGE_TYPE: local
+      DISABLE_DB_MIGRATIONS: "true"
+      DISABLE_CRON_JOBS_REGISTRATION: "true"
+    volumes:
+      - ${APP_DATA_DIR}/data/server:/app/packages/twenty-server/.local-storage
+    depends_on:
+      twenty-server:
+        condition: service_healthy
+
+  twenty-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: twenty
+      POSTGRES_PASSWORD: "${PG_DATABASE_PASSWORD}"
+      POSTGRES_DB: "default"
+    volumes:
+      - ${APP_DATA_DIR}/data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U twenty -d default"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  twenty-redis:
+    image: redis:7
+    command: ["--maxmemory-policy", "noeviction"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+x-runtipi:
+  schema_version: 2
