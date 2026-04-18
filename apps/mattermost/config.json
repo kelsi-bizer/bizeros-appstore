@@ -1,0 +1,40 @@
+{
+  "name": "Mattermost",
+  "id": "mattermost",
+  "available": true,
+  "short_desc": "Open-source, self-hosted Slack alternative for team messaging.",
+  "author": "mattermost",
+  "port": 8070,
+  "categories": [
+    "social"
+  ],
+  "description": "Mattermost is an open-source, self-hostable online chat service with file sharing, search, and integrations. It is designed as an internal chat for organisations and companies, and markets itself as an open-source alternative to Slack and Microsoft Teams.",
+  "tipi_version": 1,
+  "version": "latest",
+  "source": "https://github.com/mattermost/mattermost",
+  "website": "https://mattermost.com",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Site Name",
+      "env_variable": "SITE_NAME",
+      "required": true,
+      "hint": "Display name shown in the Mattermost UI (maps to MM_TEAMSETTINGS_SITENAME)."
+    },
+    {
+      "type": "email",
+      "label": "Admin Email",
+      "env_variable": "ADMIN_EMAIL",
+      "required": true,
+      "hint": "Email address surfaced in Mattermost as the support / admin contact."
+    }
+  ]
+}
