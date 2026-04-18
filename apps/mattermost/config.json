@@ -9,8 +9,8 @@
     "social"
   ],
   "description": "Mattermost is an open-source, self-hostable online chat service with file sharing, search, and integrations. It is designed as an internal chat for organisations and companies, and markets itself as an open-source alternative to Slack and Microsoft Teams.",
-  "tipi_version": 2,
-  "version": "latest",
+  "tipi_version": 3,
+  "version": "11.5.3",
   "source": "https://github.com/mattermost/mattermost",
   "website": "https://mattermost.com",
   "exposable": true,
