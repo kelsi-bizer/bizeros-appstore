@@ -1,0 +1,190 @@
+x-db-env: &db-env
+  PGHOST: plane-db
+  PGDATABASE: plane
+  PGDATA: /var/lib/postgresql/data
+  POSTGRES_USER: plane
+  POSTGRES_DB: plane
+  POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+  POSTGRES_PORT: "5432"
+
+x-redis-env: &redis-env
+  REDIS_HOST: plane-redis
+  REDIS_PORT: "6379"
+  REDIS_URL: redis://plane-redis:6379/
+
+x-minio-env: &minio-env
+  MINIO_ROOT_USER: plane-minio
+  MINIO_ROOT_PASSWORD: "${AWS_SECRET_ACCESS_KEY}"
+
+x-s3-env: &s3-env
+  AWS_ACCESS_KEY_ID: plane-minio
+  AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+  AWS_S3_ENDPOINT_URL: http://plane-minio:9000
+  AWS_S3_BUCKET_NAME: uploads
+  USE_MINIO: "1"
+
+x-mq-env: &mq-env
+  RABBITMQ_HOST: plane-mq
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_VHOST: plane
+  RABBITMQ_DEFAULT_USER: plane
+  RABBITMQ_DEFAULT_PASS: "${RABBITMQ_PASSWORD}"
+
+x-proxy-env: &proxy-env
+  APP_DOMAIN: ${APP_DOMAIN}
+  FILE_SIZE_LIMIT: "5242880"
+  BUCKET_NAME: uploads
+  SITE_ADDRESS: ":80"
+
+x-app-env: &app-env
+  TZ: ${TZ:-UTC}
+  DEBUG: "0"
+  GUNICORN_WORKERS: "1"
+  WEB_URL: https://${APP_DOMAIN}
+  CORS_ALLOWED_ORIGINS: https://${APP_DOMAIN}
+  DATABASE_URL: postgresql://plane:${POSTGRES_PASSWORD}@plane-db:5432/plane
+  AMQP_URL: amqp://plane:${RABBITMQ_PASSWORD}@plane-mq:5672/plane
+  SECRET_KEY: "${SECRET_KEY}"
+  LIVE_SERVER_SECRET_KEY: "${LIVE_SERVER_SECRET_KEY}"
+  API_KEY_RATE_LIMIT: 60/minute
+
+services:
+  plane-proxy:
+    image: makeplane/plane-proxy:v1.3.0
+    environment:
+      <<: *proxy-env
+    depends_on:
+      - plane-web
+      - plane-api
+      - plane-space
+      - plane-admin
+      - plane-live
+    volumes:
+      - ${APP_DATA_DIR}/data/proxy-config:/config
+      - ${APP_DATA_DIR}/data/proxy-data:/data
+    x-runtipi:
+      is_main: true
+      internal_port: 80
+
+  plane-web:
+    image: makeplane/plane-frontend:v1.3.0
+    depends_on:
+      - plane-api
+
+  plane-space:
+    image: makeplane/plane-space:v1.3.0
+    depends_on:
+      - plane-api
+      - plane-web
+
+  plane-admin:
+    image: makeplane/plane-admin:v1.3.0
+    depends_on:
+      - plane-api
+      - plane-web
+
+  plane-live:
+    image: makeplane/plane-live:v1.3.0
+    environment:
+      <<: [*redis-env]
+      API_BASE_URL: http://plane-api:8000
+      LIVE_SERVER_SECRET_KEY: "${LIVE_SERVER_SECRET_KEY}"
+    depends_on:
+      - plane-api
+      - plane-web
+
+  plane-api:
+    image: makeplane/plane-backend:v1.3.0
+    command: ./bin/docker-entrypoint-api.sh
+    environment:
+      <<: [*app-env, *db-env, *redis-env, *minio-env, *s3-env, *mq-env, *proxy-env]
+    depends_on:
+      plane-migrator:
+        condition: service_completed_successfully
+      plane-db:
+        condition: service_healthy
+      plane-redis:
+        condition: service_healthy
+      plane-mq:
+        condition: service_healthy
+
+  plane-worker:
+    image: makeplane/plane-backend:v1.3.0
+    command: ./bin/docker-entrypoint-worker.sh
+    environment:
+      <<: [*app-env, *db-env, *redis-env, *minio-env, *s3-env, *mq-env, *proxy-env]
+    depends_on:
+      plane-api:
+        condition: service_started
+
+  plane-beat-worker:
+    image: makeplane/plane-backend:v1.3.0
+    command: ./bin/docker-entrypoint-beat.sh
+    environment:
+      <<: [*app-env, *db-env, *redis-env, *minio-env, *s3-env, *mq-env, *proxy-env]
+    depends_on:
+      plane-api:
+        condition: service_started
+
+  plane-migrator:
+    image: makeplane/plane-backend:v1.3.0
+    command: ./bin/docker-entrypoint-migrator.sh
+    restart: "no"
+    environment:
+      <<: [*app-env, *db-env, *redis-env, *minio-env, *s3-env, *mq-env, *proxy-env]
+    depends_on:
+      plane-db:
+        condition: service_healthy
+      plane-redis:
+        condition: service_healthy
+
+  plane-db:
+    image: postgres:15.7-alpine
+    command: ["postgres", "-c", "max_connections=1000"]
+    environment:
+      <<: *db-env
+    volumes:
+      - ${APP_DATA_DIR}/data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U plane -d plane"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  plane-redis:
+    image: valkey/valkey:7.2.11-alpine
+    volumes:
+      - ${APP_DATA_DIR}/data/redis:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  plane-mq:
+    image: rabbitmq:3.13.6-management-alpine
+    environment:
+      <<: *mq-env
+    volumes:
+      - ${APP_DATA_DIR}/data/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  plane-minio:
+    image: minio/minio:latest
+    command: ["server", "/export", "--console-address", ":9090"]
+    environment:
+      <<: *minio-env
+    volumes:
+      - ${APP_DATA_DIR}/data/minio:/export
+    healthcheck:
+      test: ["CMD-SHELL", "mc ready local || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+x-runtipi:
+  schema_version: 2

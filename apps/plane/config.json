@@ -1,0 +1,71 @@
+{
+  "name": "Plane",
+  "id": "plane",
+  "available": true,
+  "short_desc": "Open-source project management tool for tracking issues, epics, and product roadmaps.",
+  "author": "makeplane",
+  "port": 8090,
+  "categories": [
+    "utilities"
+  ],
+  "description": "Plane is an open-source project-management platform built as an alternative to JIRA, Linear, and Monday. It tracks issues, epics, cycles, modules, and product roadmaps with customisable views. This package bundles the full Plane Community stack: frontend, admin, space, live/realtime, API, worker, beat, and migrator services, plus Postgres, Valkey (Redis), RabbitMQ, MinIO, and an nginx/Caddy reverse proxy that fronts the app on a single port.",
+  "tipi_version": 1,
+  "version": "v1.3.0",
+  "source": "https://github.com/makeplane/plane",
+  "website": "https://plane.so",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Django Secret Key",
+      "env_variable": "SECRET_KEY",
+      "required": true,
+      "min": 32,
+      "encoding": "base64",
+      "hint": "Auto-generated Django SECRET_KEY used for session / token signing across all Plane backend services."
+    },
+    {
+      "type": "random",
+      "label": "Live Server Secret",
+      "env_variable": "LIVE_SERVER_SECRET_KEY",
+      "required": true,
+      "min": 32,
+      "encoding": "base64",
+      "hint": "Auto-generated shared secret between the Plane API and the realtime (live) service."
+    },
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "POSTGRES_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled Postgres `plane` role."
+    },
+    {
+      "type": "random",
+      "label": "RabbitMQ Password",
+      "env_variable": "RABBITMQ_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled RabbitMQ `plane` user."
+    },
+    {
+      "type": "random",
+      "label": "MinIO Secret Key",
+      "env_variable": "AWS_SECRET_ACCESS_KEY",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated secret for the bundled MinIO object store. Used by the API and Plane frontend to upload / serve attachments."
+    }
+  ]
+}
