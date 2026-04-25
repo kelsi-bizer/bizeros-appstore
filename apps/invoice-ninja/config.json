@@ -1,0 +1,60 @@
+{
+  "name": "Invoice Ninja",
+  "id": "invoice-ninja",
+  "available": true,
+  "short_desc": "Self-hosted invoicing, expense tracking, and time billing for freelancers and small businesses.",
+  "author": "Invoice Ninja",
+  "port": 8881,
+  "categories": [
+    "finance"
+  ],
+  "description": "Invoice Ninja is an open-source invoicing platform for freelancers, agencies, and small businesses. Send branded invoices and quotes, track expenses, log billable time, accept online payments via 50+ gateways (Stripe, PayPal, Square, etc.), and run client portals — all from a self-hosted instance you control. This package bundles the Invoice Ninja v5 application server, an nginx reverse proxy, MariaDB 11, and a one-shot init container that prepares the data directories on first boot.",
+  "tipi_version": 1,
+  "version": "5.13.19",
+  "source": "https://github.com/invoiceninja/invoiceninja",
+  "website": "https://invoiceninja.com",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "force_pull": true,
+  "form_fields": [
+    {
+      "type": "email",
+      "label": "Admin Email",
+      "env_variable": "INVOICE_NINJA_USER_MAIL",
+      "required": true,
+      "hint": "Email used to create the initial Invoice Ninja administrator account on first boot."
+    },
+    {
+      "type": "password",
+      "label": "Admin Password",
+      "env_variable": "INVOICE_NINJA_USER_PASSWORD",
+      "required": true,
+      "min": 10,
+      "hint": "Password for the initial admin account. You can change it from the user settings page after install."
+    },
+    {
+      "type": "random",
+      "label": "MariaDB Root Password",
+      "env_variable": "INVOICE_NINJA_DB_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated MariaDB root password. The application connects via a separate `ninja` user (whose password is also `ninja`, scoped to localhost on the internal network)."
+    },
+    {
+      "type": "random",
+      "label": "App Encryption Key",
+      "env_variable": "INVOICE_NINJA_APP_KEY_RAW",
+      "required": true,
+      "min": 32,
+      "encoding": "base64",
+      "hint": "Auto-generated 32-byte key Invoice Ninja uses to encrypt session data and other Laravel secrets. Internally wrapped as `APP_KEY=base64:<this value>` for the container, so you don't need to run `artisan key:generate`. Don't rotate after first boot — existing encrypted data becomes unreadable."
+    }
+  ]
+}
