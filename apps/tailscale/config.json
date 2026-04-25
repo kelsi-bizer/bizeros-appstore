@@ -1,0 +1,93 @@
+{
+  "name": "Tailscale",
+  "id": "tailscale",
+  "available": true,
+  "short_desc": "Mesh VPN — connect every device, app, and server with WireGuard, no port-forwarding required.",
+  "author": "Tailscale Inc.",
+  "port": 8093,
+  "categories": [
+    "network",
+    "security"
+  ],
+  "description": "Tailscale is a zero-config mesh VPN built on WireGuard. Run it on this BizerOS box to put the host on your Tailnet — reach internal apps from your laptop or phone over an encrypted overlay network, advertise the LAN as a subnet route so other Tailnet devices can reach LAN-only services, or use Tailscale Serve / Funnel to publish individual apps to your Tailnet (private) or to the public internet (no port-forwarding). Tailscale has no web UI of its own; it's configured here via env vars and managed from your Tailscale admin console at login.tailscale.com. Generate a one-time auth key from the admin console (Settings → Keys → Generate auth key) and paste it into the form below to onboard this node.",
+  "tipi_version": 1,
+  "version": "v1.96.5",
+  "source": "https://github.com/tailscale/tailscale",
+  "website": "https://tailscale.com",
+  "exposable": false,
+  "no_gui": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Tailscale Auth Key",
+      "env_variable": "TAILSCALE_AUTHKEY",
+      "required": true,
+      "placeholder": "tskey-auth-...",
+      "hint": "Generate at login.tailscale.com → Settings → Keys → Generate auth key. Append `?ephemeral=true` to the key if you want the node to disappear from the Tailnet when the container stops."
+    },
+    {
+      "type": "text",
+      "label": "Tailnet Hostname",
+      "env_variable": "TAILSCALE_HOSTNAME",
+      "required": false,
+      "default": "bizeros",
+      "placeholder": "bizeros",
+      "hint": "Name this node will appear as in your Tailscale admin console and via MagicDNS."
+    },
+    {
+      "type": "boolean",
+      "label": "Auth Once",
+      "env_variable": "TAILSCALE_AUTH_ONCE",
+      "required": false,
+      "default": true,
+      "hint": "If on (recommended), only authenticate when the node has no existing session. Off forces a fresh login on every container start, which burns the auth key if it's single-use."
+    },
+    {
+      "type": "boolean",
+      "label": "Userspace Networking",
+      "env_variable": "TAILSCALE_USERSPACE",
+      "required": false,
+      "default": true,
+      "hint": "On (default) uses Tailscale's pure-userspace network stack — works in any container environment but limits subnet routing and exit-node features. Turn off for full kernel-mode networking (recommended if you want this node to act as a subnet router or exit node)."
+    },
+    {
+      "type": "boolean",
+      "label": "Accept DNS",
+      "env_variable": "TAILSCALE_ACCEPT_DNS",
+      "required": false,
+      "default": false,
+      "hint": "When on, this container will use the DNS configuration pushed from your Tailscale admin console (MagicDNS, custom resolvers). Off (default) leaves the container on Docker's default DNS."
+    },
+    {
+      "type": "text",
+      "label": "Advertised Subnet Routes",
+      "env_variable": "TAILSCALE_ROUTES",
+      "required": false,
+      "placeholder": "192.168.1.0/24,10.0.0.0/24",
+      "hint": "Comma-separated CIDRs to advertise as subnet routes. Other Tailnet devices can then reach IPs in those ranges via this node. Requires Userspace Networking off, and you must approve the routes in the Tailscale admin console."
+    },
+    {
+      "type": "text",
+      "label": "Serve Config Path",
+      "env_variable": "TAILSCALE_SERVE_CONFIG",
+      "required": false,
+      "placeholder": "/config/serve-config.json",
+      "hint": "Path inside the container to a JSON file describing Tailscale Serve / Funnel rules. Drop the file at `${APP_DATA_DIR}/data/config/serve-config.json` on the host and reference it as `/config/serve-config.json` here."
+    },
+    {
+      "type": "text",
+      "label": "Extra CLI Args",
+      "env_variable": "TAILSCALE_EXTRA_ARGS",
+      "required": false,
+      "placeholder": "--accept-routes --advertise-tags=tag:bizeros",
+      "hint": "Any additional flags appended verbatim to `tailscale up`."
+    }
+  ]
+}
