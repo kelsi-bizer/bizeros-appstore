@@ -1,0 +1,58 @@
+services:
+  authentik:
+    image: ghcr.io/goauthentik/server:2026.2.2
+    command: server
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: "${AUTHENTIK_DB_PASSWORD}"
+      AUTHENTIK_SECRET_KEY: "${AUTHENTIK_SECRET_KEY}"
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+    volumes:
+      - ${APP_DATA_DIR}/data/media:/media
+      - ${APP_DATA_DIR}/data/templates:/templates
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+    x-runtipi:
+      is_main: true
+      internal_port: 9000
+
+  authentik-worker:
+    image: ghcr.io/goauthentik/server:2026.2.2
+    command: worker
+    user: root
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: authentik-db
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: "${AUTHENTIK_DB_PASSWORD}"
+      AUTHENTIK_SECRET_KEY: "${AUTHENTIK_SECRET_KEY}"
+      AUTHENTIK_ERROR_REPORTING__ENABLED: "false"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${APP_DATA_DIR}/data/media:/media
+      - ${APP_DATA_DIR}/data/certs:/certs
+      - ${APP_DATA_DIR}/data/templates:/templates
+    depends_on:
+      authentik-db:
+        condition: service_healthy
+
+  authentik-db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: authentik
+      POSTGRES_PASSWORD: "${AUTHENTIK_DB_PASSWORD}"
+      POSTGRES_DB: authentik
+    volumes:
+      - ${APP_DATA_DIR}/data/postgres:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authentik -d authentik"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+x-runtipi:
+  schema_version: 2

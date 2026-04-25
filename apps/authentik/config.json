@@ -1,0 +1,44 @@
+{
+  "name": "Authentik",
+  "id": "authentik",
+  "available": true,
+  "short_desc": "Open-source Identity Provider for SSO, MFA, and access control.",
+  "author": "goauthentik",
+  "port": 9000,
+  "categories": [
+    "security"
+  ],
+  "description": "Authentik is an open-source Identity Provider focused on flexibility and versatility. It supports OAuth2 / OIDC, SAML, LDAP, RADIUS, and SCIM, with a flow-based engine for authentication and authorization. Use it as the SSO front door for the rest of your bizeros apps. This package bundles the authentik server, worker, and a dedicated Postgres 18 database; no Redis is required for the bundled v2026.x release.",
+  "tipi_version": 1,
+  "version": "2026.2.2",
+  "source": "https://github.com/goauthentik/authentik",
+  "website": "https://goauthentik.io",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "AUTHENTIK_DB_PASSWORD",
+      "required": true,
+      "min": 40,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled Postgres `authentik` role."
+    },
+    {
+      "type": "random",
+      "label": "Authentik Secret Key",
+      "env_variable": "AUTHENTIK_SECRET_KEY",
+      "required": true,
+      "min": 50,
+      "encoding": "base64",
+      "hint": "Auto-generated Django SECRET_KEY used by authentik to sign session cookies and tokens. Rotating it logs every user out."
+    }
+  ]
+}
