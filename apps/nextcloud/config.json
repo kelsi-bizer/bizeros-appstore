@@ -1,0 +1,53 @@
+{
+  "name": "Nextcloud",
+  "id": "nextcloud",
+  "available": true,
+  "short_desc": "Self-hosted file sync and share with web file manager, mobile/desktop clients, and shareable links.",
+  "author": "Nextcloud GmbH",
+  "port": 8083,
+  "categories": [
+    "data"
+  ],
+  "description": "Nextcloud is an open-source file sync and share platform — a self-hostable alternative to Dropbox, Google Drive, and OneDrive. This package focuses on its core file-management capability: a polished web file browser, granular share permissions (link / user / group), public share links with passwords and expiry, full versioning and trash, server-side encryption, and end-to-end clients for macOS / Windows / Linux / iOS / Android. Other optional Nextcloud apps (Calendar, Contacts, Mail, Talk, Office, etc.) can be enabled post-install from the admin UI. The package bundles Postgres 16 and Redis 7 for the application database and file-locking cache.",
+  "tipi_version": 1,
+  "version": "33.0.2-apache",
+  "source": "https://github.com/nextcloud/server",
+  "website": "https://nextcloud.com",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Admin Username",
+      "env_variable": "NEXTCLOUD_ADMIN_USER",
+      "required": true,
+      "min": 3,
+      "max": 50,
+      "hint": "Login name for the first administrator account. Created on first boot."
+    },
+    {
+      "type": "password",
+      "label": "Admin Password",
+      "env_variable": "NEXTCLOUD_ADMIN_PASSWORD",
+      "required": true,
+      "min": 10,
+      "max": 100,
+      "hint": "Password for the admin account. Pick something strong; you can change it from the user settings page after install."
+    },
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "POSTGRES_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled Postgres `nextcloud` role."
+    }
+  ]
+}
