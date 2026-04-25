@@ -1,0 +1,20 @@
+services:
+  bizeros-dash:
+    image: ghcr.io/kelsi-bizer/bizeros-dashboard:dev
+    environment:
+      TZ: ${TZ:-UTC}
+      SECRET_ENCRYPTION_KEY: "${SECRET_ENCRYPTION_KEY}"
+    volumes:
+      - ${APP_DATA_DIR}/data/appdata:/appdata
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7575/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    x-runtipi:
+      is_main: true
+      internal_port: 7575
+
+x-runtipi:
+  schema_version: 2

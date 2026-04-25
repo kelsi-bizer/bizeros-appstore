@@ -1,0 +1,35 @@
+{
+  "name": "BizerOS Dash",
+  "id": "bizeros-dash",
+  "available": true,
+  "short_desc": "BizerOS dashboard — drag-and-drop tile layout for your self-hosted services with 40+ integrations.",
+  "author": "kelsi-bizer",
+  "port": 7575,
+  "categories": [
+    "utilities"
+  ],
+  "description": "BizerOS Dash is the home-screen dashboard for your BizerOS install. It's a fork of Homarr customised for the Bizeros ecosystem: a drag-and-drop tile layout, 40+ first-party integrations (status pings, media servers, download clients, smart-home, calendars, weather, RSS, etc.), 10K+ built-in app icons, and credentials-based authentication out of the box. No YAML to write — every layout, board, and integration is configured in the web UI. Internally bundles its own Redis instance and a SQLite application database, so this app installs as a single container.",
+  "tipi_version": 1,
+  "version": "dev",
+  "source": "https://github.com/kelsi-bizer/bizeros-dashboard",
+  "website": "https://homarr.dev",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Secret Encryption Key",
+      "env_variable": "SECRET_ENCRYPTION_KEY",
+      "required": true,
+      "min": 64,
+      "encoding": "hex",
+      "hint": "Auto-generated 32-byte (64-hex-char) key used to encrypt integration credentials BizerOS Dash stores in its database. Lose or change it and every saved integration secret becomes unreadable."
+    }
+  ]
+}
