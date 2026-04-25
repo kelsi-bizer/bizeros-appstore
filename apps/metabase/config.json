@@ -1,0 +1,44 @@
+{
+  "name": "Metabase",
+  "id": "metabase",
+  "available": true,
+  "short_desc": "Open-source business intelligence — dashboards and SQL on top of any data source.",
+  "author": "metabase",
+  "port": 3000,
+  "categories": [
+    "data"
+  ],
+  "description": "Metabase is a self-hosted business-intelligence platform. Connect it to Postgres, MySQL, BigQuery, Snowflake, Mongo, and 20+ other data sources, then build dashboards, scheduled reports, and ask questions in SQL or via a no-code query builder. This package bundles the open-source Metabase server with a dedicated Postgres 16 database for application data — required for any non-throwaway install since Metabase's default H2 file store is wiped if the container is removed.",
+  "tipi_version": 1,
+  "version": "v0.60.2.5",
+  "source": "https://github.com/metabase/metabase",
+  "website": "https://www.metabase.com",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "POSTGRES_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled Postgres `metabase` role."
+    },
+    {
+      "type": "random",
+      "label": "Encryption Secret Key",
+      "env_variable": "MB_ENCRYPTION_SECRET_KEY",
+      "required": true,
+      "min": 32,
+      "encoding": "base64",
+      "hint": "Auto-generated key Metabase uses to encrypt data-source credentials and other secrets at rest. Once Metabase is in use this key cannot be rotated without re-entering every data-source password."
+    }
+  ]
+}
