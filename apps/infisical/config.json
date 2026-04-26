@@ -1,0 +1,100 @@
+{
+  "name": "Infisical",
+  "id": "infisical",
+  "available": true,
+  "short_desc": "Open-source secrets manager — store, sync, and inject API keys / DB credentials across environments.",
+  "author": "Infisical",
+  "port": 8222,
+  "categories": [
+    "security"
+  ],
+  "description": "Infisical is an open-source secrets management platform — a self-hostable alternative to HashiCorp Vault, Doppler, and AWS Secrets Manager. Store API keys, database credentials, and config secrets centrally, then sync them into your apps via CLI / SDK / Kubernetes operator, GitHub Actions, GitLab CI, Vercel, Netlify, AWS Secrets Manager, and 30+ more integrations. Includes secret versioning, point-in-time rollback, role-based access control, audit logs, dynamic secrets, and SSO. This package bundles the Infisical server, Postgres 14, and Redis.",
+  "tipi_version": 1,
+  "version": "v0.159.22",
+  "source": "https://github.com/infisical/infisical",
+  "website": "https://infisical.com",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Encryption Key",
+      "env_variable": "INFISICAL_ENCRYPTION_KEY",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated 16-byte (32-hex-char) AES key used to encrypt every secret stored in the database. Don't rotate after first boot — every stored secret becomes unreadable."
+    },
+    {
+      "type": "random",
+      "label": "JWT Auth Secret",
+      "env_variable": "INFISICAL_AUTH_SECRET",
+      "required": true,
+      "min": 32,
+      "encoding": "base64",
+      "hint": "Auto-generated key Infisical uses to sign authentication JWTs. Rotating it logs every user out."
+    },
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "INFISICAL_DB_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled Postgres `infisical` user."
+    },
+    {
+      "type": "fqdn",
+      "label": "SMTP Host",
+      "env_variable": "SMTP_HOST",
+      "required": false,
+      "placeholder": "smtp.gmail.com",
+      "hint": "Optional. Without SMTP, Infisical can't send signup invites, password resets, or notification emails — first-boot signup will still work but team-invite flows are broken."
+    },
+    {
+      "type": "number",
+      "label": "SMTP Port",
+      "env_variable": "SMTP_PORT",
+      "required": false,
+      "min": 1,
+      "max": 65535,
+      "placeholder": "587"
+    },
+    {
+      "type": "text",
+      "label": "SMTP Username",
+      "env_variable": "SMTP_USERNAME",
+      "required": false,
+      "max": 256
+    },
+    {
+      "type": "password",
+      "label": "SMTP Password",
+      "env_variable": "SMTP_PASSWORD",
+      "required": false,
+      "max": 1024
+    },
+    {
+      "type": "email",
+      "label": "SMTP From Address",
+      "env_variable": "SMTP_FROM_ADDRESS",
+      "required": false,
+      "hint": "From: address used on outbound emails (e.g. infisical@yourdomain.com)."
+    },
+    {
+      "type": "text",
+      "label": "SMTP From Name",
+      "env_variable": "SMTP_FROM_NAME",
+      "required": false,
+      "max": 256,
+      "placeholder": "Infisical",
+      "hint": "Display name on outbound emails."
+    }
+  ]
+}
