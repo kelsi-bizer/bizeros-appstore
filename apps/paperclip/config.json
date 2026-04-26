@@ -1,0 +1,26 @@
+{
+  "name": "Paperclip",
+  "id": "paperclip",
+  "available": true,
+  "short_desc": "Open-source orchestration platform for running businesses made of AI agents.",
+  "author": "Paperclip AI",
+  "port": 3100,
+  "categories": [
+    "ai",
+    "automation"
+  ],
+  "description": "Paperclip is a Node.js + React control plane that orchestrates a team of AI agents to run a business. It looks like a task manager — but under the hood it has org charts, budgets, governance, goal alignment, and agent coordination. Bring your own agents (Claude Code, Codex, OpenClaw, Cursor, bash, HTTP webhooks), assign goals, and track work + costs from one dashboard. Supports multi-company isolation in a single deployment, role-based access, heartbeat scheduling, atomic task checkout, and full audit trails. The Docker image bundles Claude Code, Codex, and opencode-ai CLIs as built-in adapter runtimes, plus an embedded Postgres so no external database is required.",
+  "tipi_version": 1,
+  "version": "latest",
+  "source": "https://github.com/paperclipai/paperclip",
+  "website": "https://paperclip.ing",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": []
+}

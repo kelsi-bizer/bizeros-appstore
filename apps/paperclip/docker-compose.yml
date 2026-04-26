@@ -1,0 +1,29 @@
+services:
+  paperclip:
+    image: ghcr.io/paperclipai/paperclip:latest
+    environment:
+      TZ: ${TZ:-UTC}
+      HOST: 0.0.0.0
+      PORT: 3100
+      NODE_ENV: production
+      SERVE_UI: "true"
+      PAPERCLIP_HOME: /paperclip
+      PAPERCLIP_INSTANCE_ID: default
+      PAPERCLIP_CONFIG: /paperclip/instances/default/config.json
+      PAPERCLIP_DEPLOYMENT_MODE: authenticated
+      PAPERCLIP_DEPLOYMENT_EXPOSURE: private
+      OPENCODE_ALLOW_ALL_MODELS: "true"
+    volumes:
+      - ${APP_DATA_DIR}/data/paperclip:/paperclip
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3100/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    x-runtipi:
+      is_main: true
+      internal_port: 3100
+
+x-runtipi:
+  schema_version: 2
