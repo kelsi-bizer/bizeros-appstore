@@ -1,0 +1,133 @@
+{
+  "name": "Cal.com",
+  "id": "calcom",
+  "available": true,
+  "short_desc": "Open-source scheduling — booking pages, calendar sync, video integrations, and team round-robin.",
+  "author": "Cal.com",
+  "port": 8294,
+  "categories": [
+    "social"
+  ],
+  "description": "Cal.com is the open-source Calendly alternative — a fully self-hostable scheduling platform with personal booking pages, two-way calendar sync (Google, Outlook, iCloud, CalDAV), video conferencing integrations (Zoom, Google Meet, Daily.co, Jitsi), and team / round-robin scheduling. This package bundles the Cal.com Community Edition with a dedicated Postgres 16 database. The full Cal.com codebase ships with some features gated behind an enterprise license (Insights, SAML, advanced Teams/Orgs) — those gracefully degrade on a self-hosted install with no license key required, and the core scheduling experience is fully open and works out of the box. Note: only `linux/amd64` is supported.",
+  "tipi_version": 1,
+  "version": "v6.2.0",
+  "source": "https://github.com/calcom/cal.com",
+  "website": "https://cal.com",
+  "exposable": true,
+  "supported_architectures": [
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "NextAuth Secret",
+      "env_variable": "CALCOM_NEXTAUTH_SECRET",
+      "required": true,
+      "min": 32,
+      "encoding": "base64",
+      "hint": "Auto-generated. Signs NextAuth session cookies. Rotating it logs every user out."
+    },
+    {
+      "type": "random",
+      "label": "Encryption Key",
+      "env_variable": "CALENDSO_ENCRYPTION_KEY",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated AES-256 key used to encrypt sensitive fields in the DB (calendar tokens, integration secrets). Don't rotate after first boot — encrypted data becomes unreadable."
+    },
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "CALCOM_DB_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled Postgres `calcom` user."
+    },
+    {
+      "type": "email",
+      "label": "Default From Address",
+      "env_variable": "EMAIL_FROM",
+      "required": true,
+      "hint": "Email address that booking confirmation, reminder, and cancellation messages will be sent from. Configure SMTP below to actually deliver them."
+    },
+    {
+      "type": "fqdn",
+      "label": "SMTP Host",
+      "env_variable": "EMAIL_SERVER_HOST",
+      "required": false,
+      "placeholder": "smtp.gmail.com",
+      "hint": "Optional but strongly recommended — without SMTP, Cal.com can't send booking confirmations / reminders. Configure your provider here, or set up later in the admin UI."
+    },
+    {
+      "type": "number",
+      "label": "SMTP Port",
+      "env_variable": "EMAIL_SERVER_PORT",
+      "required": false,
+      "min": 1,
+      "max": 65535,
+      "placeholder": "587",
+      "hint": "Typically 587 (STARTTLS) or 465 (TLS)."
+    },
+    {
+      "type": "text",
+      "label": "SMTP Username",
+      "env_variable": "EMAIL_SERVER_USER",
+      "required": false,
+      "max": 256,
+      "hint": "SMTP login username (often the same as your sending address)."
+    },
+    {
+      "type": "password",
+      "label": "SMTP Password",
+      "env_variable": "EMAIL_SERVER_PASSWORD",
+      "required": false,
+      "max": 1024,
+      "hint": "SMTP password or app-specific token (e.g. Gmail / Fastmail app password)."
+    },
+    {
+      "type": "text",
+      "label": "Google API Credentials JSON",
+      "env_variable": "CALCOM_GOOGLE_API_CREDENTIALS",
+      "required": false,
+      "max": 4096,
+      "hint": "Optional — paste the JSON `installed`/`web` block from a Google Cloud OAuth client (Calendar + Meet scopes). Enables Google Calendar sync and Google Meet video for users who connect their Google account."
+    },
+    {
+      "type": "text",
+      "label": "Microsoft Graph Client ID",
+      "env_variable": "MS_GRAPH_CLIENT_ID",
+      "required": false,
+      "max": 256,
+      "hint": "Optional — Azure AD app client ID for Office 365 / Outlook calendar integration."
+    },
+    {
+      "type": "password",
+      "label": "Microsoft Graph Client Secret",
+      "env_variable": "MS_GRAPH_CLIENT_SECRET",
+      "required": false,
+      "max": 1024,
+      "hint": "Companion secret for the Azure AD app above."
+    },
+    {
+      "type": "text",
+      "label": "Zoom Client ID",
+      "env_variable": "ZOOM_CLIENT_ID",
+      "required": false,
+      "max": 256,
+      "hint": "Optional — Zoom OAuth client ID for the Zoom video integration."
+    },
+    {
+      "type": "password",
+      "label": "Zoom Client Secret",
+      "env_variable": "ZOOM_CLIENT_SECRET",
+      "required": false,
+      "max": 1024,
+      "hint": "Companion secret for the Zoom OAuth app above."
+    }
+  ]
+}
