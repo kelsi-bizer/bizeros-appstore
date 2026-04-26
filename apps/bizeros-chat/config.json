@@ -1,0 +1,48 @@
+{
+  "name": "BizerOS Chat",
+  "id": "bizeros-chat",
+  "available": true,
+  "short_desc": "Self-hosted team chat for BizerOS — a Mattermost fork with a bundled Postgres.",
+  "author": "kelsi-bizer",
+  "port": 8071,
+  "categories": [
+    "social"
+  ],
+  "description": "BizerOS Chat is the in-house team-chat platform for the BizerOS ecosystem — a fork of [Mattermost](https://mattermost.com) packaged for one-click install on Bizeros. It keeps Mattermost's full feature set (channels, threads, DMs, file sharing, search, integrations, mobile / desktop apps) and rebrands the user-facing surface for the Bizeros ecosystem. Image: `ghcr.io/kelsi-bizer/bizeros-chat`. Currently linux/amd64 only.",
+  "tipi_version": 1,
+  "version": "022e332",
+  "source": "https://github.com/kelsi-bizer/bizeros-chat",
+  "website": "https://github.com/kelsi-bizer/bizeros-chat",
+  "exposable": true,
+  "supported_architectures": [
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Site Name",
+      "env_variable": "SITE_NAME",
+      "required": true,
+      "hint": "Display name shown in the BizerOS Chat UI (maps to MM_TEAMSETTINGS_SITENAME)."
+    },
+    {
+      "type": "email",
+      "label": "Admin Email",
+      "env_variable": "ADMIN_EMAIL",
+      "required": true,
+      "hint": "Email surfaced in the chat UI as the support / admin contact."
+    },
+    {
+      "type": "random",
+      "label": "Postgres Password",
+      "env_variable": "POSTGRES_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled Postgres `mmuser` role; rotating it requires manually updating the DB role."
+    }
+  ]
+}
