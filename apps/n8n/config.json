@@ -1,0 +1,44 @@
+{
+  "name": "n8n",
+  "id": "n8n",
+  "available": true,
+  "short_desc": "Open-source workflow automation — visual builder with 500+ integrations and built-in AI nodes.",
+  "author": "n8n GmbH",
+  "port": 5678,
+  "categories": [
+    "automation"
+  ],
+  "description": "n8n is an extendable workflow automation tool — a self-hosted, fair-code alternative to Zapier and Make. Build automations visually by chaining nodes for HTTP, databases, SaaS APIs (500+ integrations), and built-in AI / LLM agents. Workflows can run on a schedule, be triggered by webhooks, or react to events from other apps. This package bundles n8n v2 with a dedicated Postgres 16 database, a non-root DB user (best-practice security), and an init container that bootstraps file ownership on first boot.",
+  "tipi_version": 1,
+  "version": "2.18.3",
+  "source": "https://github.com/n8n-io/n8n",
+  "website": "https://n8n.io",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Postgres Root Password",
+      "env_variable": "N8N_DB_ROOT_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated. Postgres superuser password — only used by the init script that creates the n8n non-root user on first boot."
+    },
+    {
+      "type": "random",
+      "label": "n8n DB Password",
+      "env_variable": "N8N_DB_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated. Password for the limited-privileges `n8n` Postgres user that the application connects with at runtime."
+    }
+  ]
+}

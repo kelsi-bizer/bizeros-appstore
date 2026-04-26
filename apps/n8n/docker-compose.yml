@@ -1,0 +1,59 @@
+services:
+  n8n:
+    image: n8nio/n8n:2.18.3
+    environment:
+      TZ: ${TZ:-UTC}
+      GENERIC_TIMEZONE: ${TZ:-UTC}
+      N8N_HOST: ${APP_DOMAIN}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: https
+      N8N_EDITOR_BASE_URL: "https://${APP_DOMAIN}"
+      WEBHOOK_URL: "https://${APP_DOMAIN}/"
+      N8N_SECURE_COOKIE: "false"
+      N8N_DEFAULT_BINARY_DATA_MODE: filesystem
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: n8n-db
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: "${N8N_DB_PASSWORD}"
+    volumes:
+      - ${APP_DATA_DIR}/data/n8n:/home/node/.n8n
+    depends_on:
+      n8n-db:
+        condition: service_healthy
+      n8n-init:
+        condition: service_completed_successfully
+    x-runtipi:
+      is_main: true
+      internal_port: 5678
+
+  n8n-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "${N8N_DB_ROOT_PASSWORD}"
+      POSTGRES_DB: n8n
+      POSTGRES_NON_ROOT_USER: n8n
+      POSTGRES_NON_ROOT_PASSWORD: "${N8N_DB_PASSWORD}"
+    volumes:
+      - ${APP_DATA_DIR}/data/postgres:/var/lib/postgresql/data
+      - ${APP_DATA_DIR}/data/init/init-data.sh:/docker-entrypoint-initdb.d/init-data.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d n8n"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  n8n-init:
+    image: bash:5
+    command:
+      - bash
+      - -c
+      - "mkdir -p /home/node/.n8n && chown -R 1000:1000 /home/node/.n8n"
+    volumes:
+      - ${APP_DATA_DIR}/data/n8n:/home/node/.n8n
+
+x-runtipi:
+  schema_version: 2
