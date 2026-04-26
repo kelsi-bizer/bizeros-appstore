@@ -1,0 +1,44 @@
+{
+  "name": "WordPress",
+  "id": "wordpress",
+  "available": true,
+  "short_desc": "The web's most popular CMS — blogs, marketing sites, ecommerce, and 60K+ plugins.",
+  "author": "WordPress.org",
+  "port": 8213,
+  "categories": [
+    "social"
+  ],
+  "description": "WordPress is the most widely used content-management system on the web — used by everything from personal blogs to Fortune 500 marketing sites. Run it self-hosted on Bizeros to keep full control of your content, plugin code, customer data, and SEO. The package bundles WordPress 6.9 (Apache + PHP 8.4) with a dedicated MariaDB 11 database. After install, the WordPress 5-minute setup wizard walks you through site title, admin account, and tagline.",
+  "tipi_version": 1,
+  "version": "6.9.4-php8.4-apache",
+  "source": "https://github.com/WordPress/WordPress",
+  "website": "https://wordpress.org",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1745000000000,
+  "updated_at": 1745000000000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Database Password",
+      "env_variable": "WORDPRESS_DB_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated password for the bundled MariaDB `wordpress` user that the WordPress app connects with."
+    },
+    {
+      "type": "random",
+      "label": "Database Root Password",
+      "env_variable": "WORDPRESS_DB_ROOT_PASSWORD",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated MariaDB root password — used only for direct DB administration via `docker exec`."
+    }
+  ]
+}
