@@ -1,0 +1,39 @@
+{
+  "name": "Miles",
+  "id": "miles",
+  "available": true,
+  "short_desc": "Self-hosted AI agent powered by Arcee Trinity, built into BizerOS.",
+  "author": "kelsi-bizer",
+  "port": 8642,
+  "categories": ["ai"],
+  "description": "Miles is the AI agent built into BizerOS — a self-hosted assistant for small, local businesses. Powered by Arcee Trinity via the OpenAI-compatible Arcee API. Provides 90+ tools, persistent memory, and an OpenAI-compatible API endpoint on port 8642 for integration with downstream apps. Forked from NousResearch/Hermes-Agent.",
+  "tipi_version": 4,
+  "version": "0.11.0",
+  "source": "https://github.com/kelsi-bizer/miles-agent",
+  "website": "https://github.com/kelsi-bizer/miles-agent",
+  "exposable": true,
+  "supported_architectures": ["amd64", "arm64"],
+  "created_at": 1745625600000,
+  "updated_at": 1745625600000,
+  "dynamic_config": true,
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Arcee API Key",
+      "env_variable": "ARCEE_API_KEY",
+      "required": true,
+      "min": 8,
+      "max": 200,
+      "hint": "Get one at https://chat.arcee.ai/. Miles forwards every prompt to Arcee Trinity via this key."
+    },
+    {
+      "type": "random",
+      "label": "API Server Auth Key",
+      "env_variable": "API_SERVER_KEY",
+      "required": true,
+      "min": 32,
+      "encoding": "hex",
+      "hint": "Auto-generated bearer token clients must pass when calling the OpenAI-compatible /v1/chat/completions endpoint."
+    }
+  ]
+}
