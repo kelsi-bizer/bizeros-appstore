@@ -27,7 +27,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/data/mariadb:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u root -p\"$$MARIADB_ROOT_PASSWORD\""]
       interval: 10s
       timeout: 5s
       retries: 10
