@@ -1,74 +1,42 @@
 # BizerOS Chat
 
-> The team chat app for BizerOS — a Mattermost fork.
+BizerOS Chat is a self-hosted team messaging and collaboration platform.
 
-**BizerOS Chat** is the in-house team-chat platform for the BizerOS ecosystem. It's a fork of [Mattermost](https://mattermost.com) packaged for one-click install on Bizeros and rebranded for the Bizeros ecosystem. Underneath, it's the same battle-tested Mattermost server you'd expect — channels, threads, DMs, file sharing, search, plugin support, mobile + desktop clients.
+## Features
 
-**Image**: `ghcr.io/kelsi-bizer/bizeros-chat:022e332` (currently `linux/amd64` only).
+- **Channels & DMs** — public, private, and direct messaging with threaded
+  replies.
+- **File sharing & search** — upload files, full-text search across
+  messages and files.
+- **Integrations** — incoming/outgoing webhooks, slash commands, bot
+  accounts, and a plugin framework.
+- **Realtime presence** — typing indicators, read receipts, and
+  WebSocket-driven updates.
+- **Cross-platform** — works in any modern browser; mobile and desktop
+  clients available separately.
+- **Privacy by default** — runs entirely on your hardware, no third-party
+  servers in the loop.
 
-**Source**: [github.com/kelsi-bizer/bizeros-chat](https://github.com/kelsi-bizer/bizeros-chat).
+## Technical notes
 
-## Bundled services
+- Backed by PostgreSQL (bundled).
+- Listens internally on port `8065`.
+- Default site name and email sender are pre-set to **BizerOS Chat** via
+  environment variables; the bundled config-store still controls
+  everything else and can be edited from the System Console once you log
+  in.
+- Image is published at `ghcr.io/kelsi-bizer/bizeros-chat`.
 
-| Service | Image | Role |
-| --- | --- | --- |
-| `bizeros-chat` | `ghcr.io/kelsi-bizer/bizeros-chat:022e332` | Main server (internal port 8065) |
-| `bizeros-chat-db` | `postgres:15` | Application database |
+## First-time setup
 
-## What you get out of the box
+1. Open the app at the URL Runtipi assigns.
+2. Create the first user account — it automatically becomes the system
+   administrator.
+3. Visit **System Console → General → Configuration** to set the public
+   site URL, file upload limits, SMTP relay for emails, and any
+   integrations you need.
 
-- Channels (public + private), threads, direct messages
-- File uploads + full-text search (Bleve-backed)
-- Webhook integrations, slash commands, bot accounts
-- Mobile + desktop apps (point them at your Bizeros host)
-- Plugin marketplace — install the [Mattermost Agents plugin](https://github.com/mattermost/mattermost-plugin-agents) to wire up Miles or any OpenAI-compatible LLM as a bot
-- Self-hosted, fully offline-capable
+## Source
 
-## First run
-
-1. Install from the Bizeros app store. Fill in **Site Name** and **Admin Email**. The Postgres password is auto-generated.
-2. Open the app URL — the first account you create becomes the system administrator.
-
-## Configuration
-
-| Variable | Source | Purpose |
-| --- | --- | --- |
-| `MM_SQLSETTINGS_DATASOURCE` | compose | Postgres connection string to the bundled DB |
-| `MM_SERVICESETTINGS_SITEURL` | compose (`https://${APP_DOMAIN}`) | Public URL the chat generates links and OAuth callbacks against |
-| `MM_SERVICESETTINGS_ALLOWCORSFROM` | compose (`*`) | CORS allow-list |
-| `MM_TEAMSETTINGS_SITENAME` | form field `SITE_NAME` | Display name in the UI |
-| `MM_SUPPORTSETTINGS_SUPPORTEMAIL` | form field `ADMIN_EMAIL` | Support contact shown in-app |
-| `POSTGRES_PASSWORD` | auto-generated random hex | Bundled Postgres password |
-| `TZ` | compose (`${TZ:-UTC}`) | Container timezone |
-
-## Data persistence
-
-All state lives under `${APP_DATA_DIR}/data/`:
-
-- `config/` — Mattermost `config.json` and related runtime config
-- `data/` — uploaded files, images, and plugins
-- `postgres/` — Postgres data directory
-
-## Connecting Miles as a chat bot
-
-BizerOS Chat works seamlessly with the [Miles](../miles) AI agent through Mattermost's official **Agents** plugin:
-
-1. Install both apps (BizerOS Chat + Miles) from the Bizeros store.
-2. In BizerOS Chat: **System Console → Plugin Management → Plugin Marketplace → Agents → Install**.
-3. Configure the plugin: paste Miles's API URL (`http://miles:8642/v1` over the shared Bizeros internal network) and the `API_SERVER_KEY` you set when installing Miles.
-4. Set the model name to `arcee-trinity` (or whatever Miles is configured to advertise).
-5. Invite the Agents bot into any channel. `@agent` mentions route to Miles.
-
-## Notes & caveats
-
-- **`linux/amd64` only.** The current published image doesn't ship arm64. ARM hosts can't install this app yet.
-- **Pinned to a commit SHA** (`022e332`). The fork doesn't publish semver tags yet — Renovate can't auto-bump SHA pins, so updates require manually editing this docker-compose.yml when the fork ships a new tagged release.
-- **Mattermost compatibility.** Because BizerOS Chat is a near-identical fork, all Mattermost docs, plugins, and clients work as-is. Point your existing Mattermost mobile / desktop apps at the Bizeros app URL and they'll connect with no further configuration.
-- **DB compatibility.** The compose connects to a database named `mattermost` with user `mmuser` to keep schema-compatibility with upstream Mattermost.
-
-## References
-
-- [BizerOS Chat source](https://github.com/kelsi-bizer/bizeros-chat)
-- [Mattermost docs (upstream)](https://docs.mattermost.com)
-- [Mattermost configuration reference](https://docs.mattermost.com/configure/configuration-settings.html)
-- [Mattermost Agents plugin](https://github.com/mattermost/mattermost-plugin-agents)
+This is a rebrand of the open-source Mattermost Team Edition codebase.
+The fork lives at <https://github.com/kelsi-bizer/bizeros-chat>.
