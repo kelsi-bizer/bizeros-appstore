@@ -14,6 +14,7 @@
   "source": "https://github.com/mattermost/mattermost",
   "website": "https://mattermost.com",
   "exposable": true,
+  "force_expose": true,
   "supported_architectures": [
     "amd64"
   ],
