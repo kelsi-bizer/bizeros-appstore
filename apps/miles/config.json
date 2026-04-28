@@ -12,6 +12,7 @@
   "source": "https://github.com/kelsi-bizer/miles-agent",
   "website": "https://github.com/kelsi-bizer/miles-agent",
   "exposable": true,
+  "force_expose": true,
   "supported_architectures": ["amd64", "arm64"],
   "created_at": 1745625600000,
   "updated_at": 1745625600000,

@@ -15,6 +15,7 @@
   "source": "https://github.com/paperclipai/paperclip",
   "website": "https://paperclip.ing",
   "exposable": true,
+  "force_expose": true,
   "supported_architectures": [
     "arm64",
     "amd64"
